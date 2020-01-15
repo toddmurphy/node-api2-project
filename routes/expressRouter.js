@@ -64,4 +64,30 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+//POST
+router.post('/', (req, res) => {
+  const newPost = req.body;
+
+  db.insert(newPost)
+    .then(blog => {
+      if (newPost.title || newPost.contents) {
+        res.status(201);
+        res.json(blog);
+      } else {
+        res.status(400);
+        res.json({ errorMessage: 'Please provide title and contents for the post.', error });
+      }
+    })
+    .catch(error => {
+      res.status(500);
+      res.json({ error: 'There was an error while saving the post to the database', error });
+    });
+});
+
+//d
+
+//d
+
+//d
+
 module.exports = router;
