@@ -84,10 +84,50 @@ router.post('/', (req, res) => {
     });
 });
 
-//d
+//GET COMMENTS by ID --> not sure why it's not working -->getting and error
+router.get('/:id/comments', (req, res) => {
+  const postId = req.params.id;
+  db.findPostComments(postId)
+    .then(comments => {
+      if (postId) {
+        res.status(200);
+        res.json(comments);
+      } else {
+        res.status(404);
+        res.json({ message: 'The post with the specific ID does not exist', error });
+      }
+    })
+    .catch(error => {
+      console.log(err);
+      res.status(500);
+      res.json({ error: 'The comments information could not be retrieved', error });
+    });
+});
 
-//d
+//POST COMMENTS by ID
 
-//d
+//PUT --> Edit
+router.put('/:id', (req, res) => {
+  const editID = req.params.id;
+  const editPost = req.body;
+
+  db.update(editID, editPost)
+    .then(updatedPost => {
+      if (!editID) {
+        res.status(404);
+        res.json({ message: 'The post with the specified ID does not exist.', error });
+      } else if (!editPost.title || !editPost.contents) {
+        res.status(400);
+        res.json({ errorMessage: 'Please provide title and contents for the post.', error });
+      } else {
+        res.status(200);
+        res.json({ updatedPost });
+      }
+    })
+    .catch(error => {
+      res.status(500);
+      res.json({ error: 'The post information could not be modified.', error });
+    });
+});
 
 module.exports = router;
