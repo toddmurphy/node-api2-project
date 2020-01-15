@@ -105,6 +105,30 @@ router.get('/:id/comments', (req, res) => {
 });
 
 //POST COMMENTS by ID
+router.post('/:id/comments', (req, res) => {
+  const commentsID = req.params.id;
+  const commentsPost = req.body;
+
+  db.insertComment(commentsPost);
+
+  db.findById(commentsID)
+    .then(newComment => {
+      if (!commentsID) {
+        res.status(404);
+        res.json({ message: 'The post with the specified ID does not exist.', error });
+      } else if (!commentsPost.text) {
+        res.status(400);
+        res.json({ errorMessage: 'Please provide text for the comment.', error });
+      } else {
+        res.status(201);
+        res.json({ newComment });
+      }
+    })
+    .catch(error => {
+      res.status(500);
+      res.json({ error: 'There was an error while saving the comment to the database', error });
+    });
+});
 
 //PUT --> Edit
 router.put('/:id', (req, res) => {
