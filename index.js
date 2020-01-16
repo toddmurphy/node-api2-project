@@ -1,9 +1,10 @@
 const express = require('express');
+require('dotenv').config();
 const expressRouter = require('./routes/expressRouter');
 
 const server = express();
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT;
 
 server.use('/api/posts', expressRouter);
 server.get('/', (req, res) => {
